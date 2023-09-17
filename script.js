@@ -42,30 +42,33 @@ function GameBoard() {
 // function that check if user won
 function CheckWin(board, player) {
     // Horizontal win
-    for ( let row = 0; row < 3; row++) {
+    for ( let i = 0; i <= 9; i+=3) {
         if (
-            board[row][0] === player &&
-            board[row][1] === player &&
-            board[row][2] === player
+            board[0 + i] === player &&
+            board[1 + i] === player &&
+            board[2 + i] === player
             ) {
+                console.log('win');
                 return true;
             }
     }
 
     // Vertical win
-    for ( let col = 0; col < 3; col++) {
+    for ( let i = 0; i < 3; i++) {
         if (
-            board[0][col] === player &&
-            board[1][col] === player &&
-            board[2][col] === player
+            board[0 + i] === player &&
+            board[3 + i] === player &&
+            board[6 + i] === player
             ) {
-                return true;
+                console.log('win');
+                // return true;
             }
     }
     if (
-        (board[0][0] === player && board[1][1] === player && board[2][2] === player) ||
-        (board[0][2] === player && board[1][1] === player && board[2][0] === player)
+        (board[0] === player && board[4] === player && board[8] === player) ||
+        (board[2] === player && board[4] === player && board[6] === player)
     ) {
+        console.log('win');
         return true;
     }
     return false;
@@ -95,7 +98,7 @@ function startGame() {
 
         const row = parseInt(prompt("Enter row (0, 1, 2)"));
         const col = parseInt(prompt("Enter col (0, 1, 2)"));
-        gameBoard.setCell(row, col, currentPlayer)
+        // gameBoard.setCell(row, col, currentPlayer)
 
         if (
             row >= 0 &&
@@ -116,15 +119,54 @@ function startGame() {
                 console.log("It\'s a tie!");
                 break;
             }
-        currentPlayer = currentPlayer === "[X]" ? "[O]" : "[X]";
+        currentPlayer = ChangePlayer(currentPlayer);
 
         }
         
         else {
             console.log("Invalid move");
+            // break;
         }
     }
 
 }
 
-startGame();
+function ChangePlayer(currentPlayer) {
+    return currentPlayer = currentPlayer === "[X]" ? "[O]" : "[X]";
+}
+
+// Change the cell display in the web UI.
+function ChangeCellUI(){
+    let playerX = document.createElement("span");
+    playerX.innerHTML = "[X]";
+    var cells = document.getElementsByClassName("cell");
+    const moveArrayX = new Array(9);
+    console.log(moveArrayX.length)
+    const moveArrayO = new Array(9);
+
+
+    for ( let i = 0; i < cells.length; i++ ) {
+        cells[i].addEventListener("click", () => {
+            cells[i].appendChild(playerX.cloneNode(true));
+            if ( playerX.innerHTML == "[X]") {
+                moveArrayX.splice(i, 1, "[X]");
+                console.log(moveArrayX);
+                CheckWin(moveArrayX, playerX.innerHTML);
+            } else {
+                moveArrayO.splice(i, 1, "[O]");
+                console.log(moveArrayO);
+                CheckWin(moveArrayO, playerX.innerHTML);
+
+            }
+        playerX.innerHTML = ChangePlayer(playerX.innerHTML);
+        });
+    }
+}
+ChangeCellUI();
+// startGame();
+
+
+let stringTitle = "prototipo-sistema-control-acceso-transporte-escolar-scate-obtiene-premio-smart-city";
+const stringArray = stringTitle.split("-");
+let originalString = stringArray.join(" ");
+console.log(originalString);
